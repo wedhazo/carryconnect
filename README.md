@@ -434,7 +434,7 @@ spring.datasource.username=root
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:Home2022}
 ```
 
-### Environment Variables
+### Overriding Configuration
 
 Override configuration using environment variables in docker-compose.yml:
 
