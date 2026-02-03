@@ -32,6 +32,29 @@ Before you begin, ensure you have the following installed:
 
 ### Using Docker Compose (Recommended)
 
+#### Option 1: Using the Quick Start Script
+
+The easiest way to get started:
+
+```bash
+./start-monitoring.sh
+```
+
+This script will:
+- Check if Docker is running
+- Verify required ports are available
+- Start all services with docker compose
+- Wait for services to be healthy
+- Display access URLs and credentials
+
+To stop all services:
+
+```bash
+./stop-monitoring.sh
+```
+
+#### Option 2: Manual Docker Compose
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/wedhazo/carryconnect.git
@@ -40,7 +63,7 @@ Before you begin, ensure you have the following installed:
 
 2. **Start all services:**
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
    This will start:
@@ -51,7 +74,7 @@ Before you begin, ensure you have the following installed:
 
 3. **Wait for services to be ready:**
    ```bash
-   docker-compose ps
+   docker compose ps
    ```
 
    All services should show "healthy" status.
@@ -284,22 +307,22 @@ public class TripService {
 
 ```bash
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # Stop all services
-docker-compose down
+docker compose down
 
 # View logs
-docker-compose logs -f [service-name]
+docker compose logs -f [service-name]
 
 # Restart a specific service
-docker-compose restart [service-name]
+docker compose restart [service-name]
 
 # Rebuild and restart
-docker-compose up -d --build
+docker compose up -d --build
 
 # Remove all containers and volumes
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Troubleshooting
@@ -309,7 +332,7 @@ docker-compose down -v
 **Problem**: Services fail to start or show unhealthy status
 
 **Solutions**:
-1. Check logs: `docker-compose logs [service-name]`
+1. Check logs: `docker compose logs [service-name]`
 2. Ensure ports are not already in use: `netstat -tuln | grep -E '3000|8081|9090|3306'`
 3. Verify Docker has enough resources (at least 4GB RAM recommended)
 
@@ -328,8 +351,8 @@ docker-compose down -v
 **Problem**: Cannot reach services at expected URLs
 
 **Solutions**:
-1. Check if containers are running: `docker-compose ps`
-2. Verify port mappings: `docker-compose port [service-name] [port]`
+1. Check if containers are running: `docker compose ps`
+2. Verify port mappings: `docker compose port [service-name] [port]`
 3. Check firewall rules if running on a remote server
 4. For Windows/Mac, ensure Docker Desktop is running
 
@@ -338,9 +361,9 @@ docker-compose down -v
 **Problem**: Application fails to connect to MySQL
 
 **Solutions**:
-1. Wait for MySQL to fully initialize (check logs: `docker-compose logs mysql`)
+1. Wait for MySQL to fully initialize (check logs: `docker compose logs mysql`)
 2. Verify database credentials in docker-compose.yml match application.properties
-3. Ensure MySQL container is healthy: `docker-compose ps mysql`
+3. Ensure MySQL container is healthy: `docker compose ps mysql`
 
 ### High Memory Usage
 
