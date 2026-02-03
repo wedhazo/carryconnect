@@ -35,6 +35,9 @@ build/
 ### Docker ###
 *.log
 
+### Environment Variables ###
+.env
+
 ### Monitoring Data ###
 prometheus-data/
 grafana-data/

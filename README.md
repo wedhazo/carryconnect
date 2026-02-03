@@ -47,6 +47,14 @@ This script will:
 - Wait for services to be healthy
 - Display access URLs and credentials
 
+**Note:** For production use, copy `.env.example` to `.env` and update with secure credentials:
+
+```bash
+cp .env.example .env
+# Edit .env with your secure passwords
+./start-monitoring.sh
+```
+
 To stop all services:
 
 ```bash
@@ -92,7 +100,7 @@ To stop all services:
    ```bash
    # Using Docker
    docker run -d --name mysql \
-     -e MYSQL_ROOT_PASSWORD=Home2022 \
+     -e MYSQL_ROOT_PASSWORD=your_secure_password \
      -e MYSQL_DATABASE=carryconnect \
      -p 3306:3306 \
      mysql:8.0
@@ -100,6 +108,9 @@ To stop all services:
 
 2. **Build and run the application:**
    ```bash
+   # Set database password
+   export SPRING_DATASOURCE_PASSWORD=your_secure_password
+   
    ./mvnw clean package
    ./mvnw spring-boot:run
    ```
@@ -379,6 +390,31 @@ docker compose down -v
 
 ## Configuration Reference
 
+### Environment Variables
+
+The monitoring stack can be configured using environment variables. Copy `.env.example` to `.env` and customize:
+
+```bash
+cp .env.example .env
+```
+
+Available environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MYSQL_ROOT_PASSWORD` | `Home2022` | MySQL root password (change in production) |
+| `MYSQL_DATABASE` | `carryconnect` | MySQL database name |
+| `MYSQL_USER` | `root` | MySQL username |
+| `GRAFANA_ADMIN_USER` | `admin` | Grafana admin username |
+| `GRAFANA_ADMIN_PASSWORD` | `admin` | Grafana admin password (change in production) |
+
+**Security Best Practices:**
+- Never commit `.env` files to version control
+- Use strong, unique passwords for production
+- Consider using Docker secrets for sensitive data
+- Rotate credentials regularly
+- Limit network exposure of services in production
+
 ### Application Properties
 
 Key configuration options in `src/main/resources/application.properties`:
@@ -392,10 +428,10 @@ management.endpoints.web.exposure.include=health,info,prometheus,metrics
 management.endpoint.prometheus.enabled=true
 management.metrics.export.prometheus.enabled=true
 
-# Database (auto-configured in Docker Compose)
+# Database (use environment variables for credentials)
 spring.datasource.url=jdbc:mysql://localhost:3306/carryconnect
 spring.datasource.username=root
-spring.datasource.password=Home2022
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:Home2022}
 ```
 
 ### Environment Variables
@@ -406,9 +442,11 @@ Override configuration using environment variables in docker-compose.yml:
 environment:
   - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/carryconnect
   - SPRING_DATASOURCE_USERNAME=root
-  - SPRING_DATASOURCE_PASSWORD=your_password
+  - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD:-Home2022}
   - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,prometheus
 ```
+
+Or use a `.env` file for better security (see `.env.example`).
 
 ## Contributing
 
@@ -432,8 +470,11 @@ For issues and questions:
 ---
 
 **Note**: This setup is configured for development environments. For production use, ensure you:
-- Change default passwords
+- Change default passwords using `.env` file
 - Configure proper authentication for Grafana
 - Set up persistent storage for Prometheus data
-- Implement proper security measures
+- Implement proper security measures (TLS, network policies, etc.)
 - Use environment-specific configuration
+- Consider using Docker secrets or a secrets manager
+- Enable authentication for Prometheus if exposed publicly
+- Configure firewall rules appropriately

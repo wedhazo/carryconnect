@@ -4,8 +4,8 @@ services:
     image: mysql:8.0
     container_name: carryconnect-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: Home2022
-      MYSQL_DATABASE: carryconnect
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Home2022}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-carryconnect}
     ports:
       - "3306:3306"
     volumes:
@@ -24,9 +24,9 @@ services:
       dockerfile: Dockerfile
     container_name: carryconnect-api
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/carryconnect
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: Home2022
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-carryconnect}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-root}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Home2022}
     ports:
       - "8081:8081"
     depends_on:
@@ -66,8 +66,8 @@ services:
     image: grafana/grafana:latest
     container_name: carryconnect-grafana
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
     ports:
       - "3000:3000"
