@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker ###
+*.log
+
+### Monitoring Data ###
+prometheus-data/
+grafana-data/
+mysql-data/
